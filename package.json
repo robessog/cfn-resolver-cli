@@ -1,6 +1,6 @@
 {
   "name": "cfn-resolver-cli",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "CLI to resolve AWS Cloudformation templates",
   "main": "cli.js",
   "scripts": {
@@ -27,7 +27,7 @@
   "author": "robessog",
   "license": "ISC",
   "dependencies": {
-    "cfn-resolver-lib": "^1.0.2",
+    "cfn-resolver-lib": "^1.0.3",
     "chai": "^4.2.0",
     "fs-extra": "^8.1.0",
     "glob": "^7.1.6",
