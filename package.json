@@ -1,11 +1,13 @@
 {
   "name": "cfn-resolver-cli",
-  "version": "1.0.2",
+  "version": "1.0.6",
   "description": "CLI to resolve AWS Cloudformation templates",
-  "main": "cli.js",
+  "main": "index.js",
   "scripts": {
     "test": "mocha --recursive",
-    "coverage": "nyc --all --reporter cobertura --reporter text --report-dir ./coverage npm run test"
+    "coverage": "nyc --all --reporter cobertura --reporter text --report-dir ./coverage npm run test",
+    "pretest": "npm link",
+    "posttest": "npm unlink"
   },
   "repository": {
     "type": "git",
@@ -17,7 +19,7 @@
     "AWS",
     "resolve",
     "debug",
-    "troubelsoot",
+    "troubleshoot",
     "test",
     "CLI"
   ],
@@ -27,7 +29,7 @@
   "author": "robessog",
   "license": "ISC",
   "dependencies": {
-    "cfn-resolver-lib": "^1.0.3",
+    "cfn-resolver-lib": "^1.0.6",
     "chai": "^4.2.0",
     "fs-extra": "^8.1.0",
     "glob": "^7.1.6",

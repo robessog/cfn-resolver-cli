@@ -8,3 +8,4 @@ out
 yalc.lock
 .yalc
 cfn-resolver-cli-*.tgz
+test
