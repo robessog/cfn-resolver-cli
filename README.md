@@ -93,7 +93,7 @@ npm i -g cfn-resolver-cli
 ```
 ## How to use? 
 ```
-cfn-resolver "./template.yml" -p "./params/**" -o "./resolved"
+cfn-resolver -i "./template.yml" -p "./params/**" -o "./resolved"
 ```
 
 ```
