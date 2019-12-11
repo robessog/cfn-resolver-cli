@@ -1,4 +1,4 @@
-const NodeEvaulator = require('cfn-resolver-lib');
+const NodeEvaluator = require('cfn-resolver-lib');
 
 const yargs = require('yargs');
 const fs = require('fs');
@@ -45,16 +45,16 @@ glob(argv.params, {nodir: true}, (err, paramFiles) => {
     const paramsContent = fs.readFileSync(file);
     const params = JSON.parse(paramsContent);
 
-    const nodeEval = new NodeEvaulator(srcObj, params, argv.verbose);
-    const evaulatedObj = nodeEval.evaulateNodes();
+    const nodeEval = new NodeEvaluator(srcObj, params, argv.verbose);
+    const evaluatedObj = nodeEval.evaluateNodes();
 
     const outBaseDir = argv.output || path.dirname(argv.input)
     const outFilePath = path.join(outBaseDir, path.basename(argv.input, path.extname(argv.input)) + "-resolved-" + path.basename(file, path.extname(file)));
 
 
     try {
-      fsExtra.outputFileSync(outFilePath + ".json", JSON.stringify(evaulatedObj, null, 2))
-      let yamlStr = jsYaml.safeDump(evaulatedObj);
+      fsExtra.outputFileSync(outFilePath + ".json", JSON.stringify(evaluatedObj, null, 2))
+      let yamlStr = jsYaml.safeDump(evaluatedObj);
       fsExtra.outputFileSync(outFilePath + '.yaml', yamlStr, 'utf8');
 
       console.log("Output written: " + outFilePath + ".yaml");
@@ -68,4 +68,4 @@ glob(argv.params, {nodir: true}, (err, paramFiles) => {
 })
 
 
-module.exports = NodeEvaulator;
+module.exports = NodeEvaluator;
