@@ -6,6 +6,7 @@
   "scripts": {
     "test": "mocha --recursive",
     "coverage": "nyc --all --reporter cobertura --reporter text --report-dir ./coverage npm run test",
+    "report-coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
     "pretest": "npm link",
     "posttest": "npm unlink"
   },
@@ -37,5 +38,8 @@
     "mocha": "^6.2.2",
     "nyc": "^14.1.1",
     "yargs": "^15.0.2"
+  },
+  "devDependencies": {
+    "codecov": "^3.6.1"
   }
 }

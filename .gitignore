@@ -6,3 +6,4 @@ yalc.lock
 .yalc
 cfn-resolver-cli-*.tgz
 .DS_Store
+coverage.lcov

@@ -9,3 +9,4 @@ yalc.lock
 .yalc
 cfn-resolver-cli-*.tgz
 test
+coverage.lcov
