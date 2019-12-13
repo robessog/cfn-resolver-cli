@@ -30,16 +30,16 @@
   "author": "robessog",
   "license": "ISC",
   "dependencies": {
-    "cfn-resolver-lib": "^1.1.0",
-    "chai": "^4.2.0",
+    "cfn-resolver-lib": "^1.1.2",
     "fs-extra": "^8.1.0",
     "glob": "^7.1.6",
     "js-yaml": "^3.13.1",
-    "mocha": "^6.2.2",
-    "nyc": "^14.1.1",
     "yargs": "^15.0.2"
   },
   "devDependencies": {
-    "codecov": "^3.6.1"
+    "chai": "^4.2.0",
+    "codecov": "^3.6.1",
+    "mocha": "^6.2.2",
+    "nyc": "^14.1.1"
   }
 }
