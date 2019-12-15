@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.com/robessog/cfn-resolver-cli.svg?branch=master)](https://travis-ci.com/robessog/cfn-resolver-cli)
 [![codecov](https://codecov.io/gh/robessog/cfn-resolver-cli/branch/master/graph/badge.svg)](https://codecov.io/gh/robessog/cfn-resolver-cli)
+![depend bot](https://badgen.net/dependabot/robessog/cfn-resolver-lib?icon=dependabot)
 [![npm version](https://badge.fury.io/js/cfn-resolver-cli.svg)](https://badge.fury.io/js/cfn-resolver-cli)
 
 NodeJS CLI that resolves and evaluates values in [AWS CloudFormation](https://aws.amazon.com/cloudformation/) templates based on the provided stack parameters and produces the resolved templates in YAML and JSON.
