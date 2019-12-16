@@ -16,43 +16,47 @@ If you have more than couple of these in your templates it is quite time consumi
 Your CloudFormation template:
 ``` yaml
 Mappings:
-  FooSrvS3ReaderAccountIdMap:
-    "us-east-1":
-      AccountId: "111111111111"
-    "us-west-2":
-      AccountId: "222222222222"
   FooSrvS3ReaderUserIdMap:
     "us-east-1":
       UserName: "s3_reader_new"
     "us-west-2":
       UserName: "s3_reader"
+Resources:
+  HelloBucket:
+    Properties:
+      BucketName: "hello-cfn-resolver" # has to be globally unique, calculation is removed for clearity
+    Type: "AWS::S3::Bucket"
+  FooSrvBucketPolicy":
+    Type: "AWS::S3::BucketPolicy"
+    Properties:
+      Bucket:
+        Ref: HelloBucket
+      PolicyDocument:
+        Statement:
+        - Action": "s3:GetObject*"
+          Effect": Allow
+          Principal:
+            AWS:
+              "Fn::Join":
+              - ""
+              - - "arn:"
+              - "Ref": "AWS::Partition"
+              - ":iam::"
+              - "AWS::AccountId"
+              - ":user/"
+              - - "Fn::FindInMap":
+                  - "FooSrvS3ReaderUserIdMap"
+                  - "Ref": "AWS::Region"
+                  - "UserName"
+          Resource:
+            "Fn::Join":
+            - ""
+            - - "Fn::GetAtt":
+                - HelloBucket
+                - Arn
+              - "/*"
 ```
-Extract from an IAM policy:
-``` yaml
-  Principal:
-    AWS:
-      "Fn::Join":
-      - ""
-      - - "arn:"
-      - "Ref": "AWS::Partition"
-      - ":iam::"
-      - "Fn::FindInMap":
-          - "FooSrvS3ReaderAccountIdMap"
-          - "Ref": "AWS::Region"
-          - "AccountId"
-      - ":user/"
-      - - "Fn::FindInMap":
-          - "FooSrvS3ReaderUserIdMap"
-          - "Ref": "AWS::Region"
-          - "UserName"
-  Resource:
-    "Fn::Join":
-    - ""
-    - - "Fn::GetAtt":
-        - "AuditLogsBucket"
-        - "Arn"
-      - "/*"
-```
+
 Define stack parameters: (e.g. `prod-us-west-2-params.json`)
 ```json
 {
@@ -72,15 +76,15 @@ Resolved CloudFormation template
 
 ``` yaml
   Principal:
-    AWS: "arn:aws:iam::222222222222:user/s3_reader"
-    Resource: "arn:aws:s3:::prod-uswest2-redshift-log/*"
+    AWS: "arn:aws:iam::000000111111:user/s3_reader"
+    Resource: "arn:aws:s3:::hello-cfn-resolver/*"
 ```
 
 [cfn-resolver](https://www.npmjs.com/package/cfn-resolver-cli) can help you
 * understand your CFN template better
 * troubleshoot CloudFormation deployment issues faster
 * secure your IaC with unit tests that assert on exact values before actually deploying anything
-  * e.g. your unit test now can assert that the `s3_reader` IAM user has access to `prod-uswest2-redshift-log` S3 bucket in `us-west-2` region in your `prod` stack.
+  * e.g. your unit test now can assert that the `s3_reader` IAM user has access to `hello-cfn-resolver` S3 bucket in `us-west-2` region in your `prod` stack.
 
 ## Installation
 
@@ -160,7 +164,7 @@ Define your Fn::ImportValue resolvers in the parameters file as the following:
 * [Fn::Select](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-select.html)
 * [Fn::Split](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-split.html)
 * [Fn::Sub](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-sub.html) (at the moment only key-value map subtitution is supported)
-* Support [Fn::ImportValue](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-importvalue.html)
+* [Fn::ImportValue](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-importvalue.html)
 * [Ref](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-ref.html)
 
 
