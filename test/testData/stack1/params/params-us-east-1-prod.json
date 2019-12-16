@@ -11,5 +11,10 @@
        "AuditLogsBucket": {
             "Arn": "arn:aws:s3:::redshift-log"
        }
+    },
+    "Fn::ImportValueResolvers": {
+        "RedshiftMainClusterSecurityGroup": "FooSrvRsMainClusterSecurityGroupFakeId",
+        "RedshiftMainClusterSubnet1": "FooSrvSubnet1FakeId",
+        "RedshiftMainClusterSubnet2": "FooSrvSubnet2FakeId"
     }
 }

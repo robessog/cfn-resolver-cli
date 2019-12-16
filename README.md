@@ -63,11 +63,6 @@ Define stack parameters: (e.g. `prod-us-west-2-params.json`)
         "AWS::AccountId": "000000111111",
         "Stage": "prod",
         "AWS::StackId": "MyEvaluatedStackUsWest2"
-    },
-    "Fn::GetAttResolvers": {
-       "AuditLogsBucket": {
-            "Arn": "arn:aws:s3:::prod-uswest2-redshift-log"
-       }
     }
 }
 
@@ -86,7 +81,6 @@ Resolved CloudFormation template
 * troubleshoot CloudFormation deployment issues faster
 * secure your IaC with unit tests that assert on exact values before actually deploying anything
   * e.g. your unit test now can assert that the `s3_reader` IAM user has access to `prod-uswest2-redshift-log` S3 bucket in `us-west-2` region in your `prod` stack.
-
 
 ## Installation
 
@@ -109,23 +103,45 @@ Options:
   --version      Show version number                                   [boolean]
 ```
 
-### GetAtt Resolvers
-For [Fn:GetAtt](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-getatt.html) function you need to specify resolved values in the parameter files: (e.g. `prod-us-west-2-params.json`)
+## Extensibility & Customization
+You can pass additional resolver maps in the parameters file, just like `RefResolvers` to customize or **override** the built-in behaviour.
+
+### Fn::GetAtt resolution
+By default the tool tries to resolve the attributes of resources that are defined within the template itself, but you have the opportunity to override the behaviour for specific cases.
+Just define the Fn::GetAtt resolver map for custom attribute resolution:
+
 ```json
 {
-    "RefResolvers":
-    {
-        "AWS::Region": "us-west-2",
-        "AWS::Partition": "aws",
-        "AWS::AccountId": "000000111111",
-        "Stage": "prod",
-        "AWS::StackId": "MyEvaluatedFakeStackUsWest2"
-    },
     "Fn::GetAttResolvers": {
-       "AuditLogsBucket": {
-            "Arn": "arn:aws:s3:::prod-uswest2-redshift-log"
-       }
-    }
+      "MyResourceLogicalId1": {
+        "AttribeteKey1": "TheOverridenAttributeValue"
+      }
+  }
+}
+```
+
+#### ARN resolution
+With `Fn::GetAtt` you can refer to ARN of an other resource defined in the template.
+The tool supports ARN resolution for some of the most common AWS CloudFormation resource types (Lambda function, SQS queue, SNS topic, S3 bucket, DyanmoDB Table, etc), but user can provide additional ARN shemas in the parameters file:
+
+```json
+{ 
+  "ArnSchemas": {
+    "AWS::DynamoDB::Table": "arn:${Partition}:dynamodb:${Region}:${Account}:table/${TableName}"
+  }
+}
+
+```
+The `${Partition}`, `${Region}` and `${Region}` placeholders will be resolved by using the stack parameters. The last placeholder of the arn schema (in the above example `${TableName}`) will be resolved from the attribute from the resource (if both the resource and its attribute can be found in the template).
+
+
+### Fn::ImportValue resolvers
+Define your Fn::ImportValue resolvers in the parameters file as the following:
+```json
+{ 
+  "Fn::ImportValueResolvers": {
+    "OtherStacksExportedKey1": "MyFakeImportedValue1"
+  }
 }
 ```
 
@@ -144,6 +160,7 @@ For [Fn:GetAtt](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/i
 * [Fn::Select](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-select.html)
 * [Fn::Split](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-split.html)
 * [Fn::Sub](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-sub.html) (at the moment only key-value map subtitution is supported)
+* Support [Fn::ImportValue](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-importvalue.html)
 * [Ref](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-ref.html)
 
 
@@ -152,7 +169,6 @@ For [Fn:GetAtt](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/i
 
 ## Roadmap
 * Enchance [Fn::Sub](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-sub.html) to work with template parameter names, resource logical IDs, resource attributes
-* Support [Fn::ImportValue](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-importvalue.html)
 * Support [Fn::Base64](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-base64.html)
 * Support [Fn::Cidr](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-cidr.html)
 * Add linter/debugging features by identified valudation errors and warnings found during template evaluation (e.g. like [cfn-lint](https://www.npmjs.com/package/cfn-lint))
