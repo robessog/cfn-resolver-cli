@@ -220,6 +220,11 @@
               "Effect": "Allow",
               "Principal": {
                 "Service": "redshift.amazonaws.com"
+              },
+              "Condition": {
+                "ForAnyValue:StringLike": {
+                  "mysrvprincipal.com:category": 2
+                }
               }
             }
           ],
@@ -379,6 +384,12 @@
         ]
       },
       "Type": "AWS::IAM::Policy"
+    },
+    "IdentityPool": {
+      "Type": "AWS::Cognito::IdentityPool",
+      "Properties": {
+        "IdentityPoolName": "${self:service} ${self:provider.stage} identity pool"
+      }
     }
   }
 }

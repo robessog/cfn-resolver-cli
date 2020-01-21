@@ -287,6 +287,13 @@
           "Effect": "Allow"
           "Principal":
             "Service": "redshift.amazonaws.com"
+          "Condition":
+            "ForAnyValue:StringLike":
+              "mysrvprincipal.com:category":
+                "Fn::FindInMap":
+                - "RedshiftNumberOfNodes"
+                - "Ref": "AWS::Region"
+                - "Ref": "Stage"
         "Version": "2012-10-17"
       "RoleName":
         "Fn::Join":
@@ -460,4 +467,9 @@
       "Roles":
       - "Ref": "MainClusterRole"
     "Type": "AWS::IAM::Policy"
+  IdentityPool:
+      Type: AWS::Cognito::IdentityPool
+      Properties:
+        IdentityPoolName:
+          Fn::Join: [' ', Fn::Split: ['-', '${self:service}-${self:provider.stage}-identity-pool']]
 ...

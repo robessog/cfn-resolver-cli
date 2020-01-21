@@ -14,13 +14,13 @@ const executeCli = (templteStackName) => {
 
 const testTemplate = (templteStackName, paramsQaulifier) => {
     const fileName = `template-resolved-params-${paramsQaulifier}.json`;
-    const outputContent = require(`./out/stack1/${fileName}`);
+    const outputContent = require(`./out/${templteStackName}/${fileName}`);
     const expectedContent = require(`./testData/${templteStackName}/expected/expected-${paramsQaulifier}.json`);
 
     expect(expectedContent).to.be.deep.equal(outputContent);
 }
 
-describe('CLI', () => {
+describe('CLI stack1', () => {
     executeCli("stack1");
 
     it('resolve stack1 teamplate for us-east-1 Prod', () => {
