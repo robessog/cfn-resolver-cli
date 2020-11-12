@@ -31,7 +31,7 @@
   "license": "ISC",
   "dependencies": {
     "cfn-resolver-lib": "^1.1.7",
-    "fs-extra": "^8.1.0",
+    "fs-extra": "^9.0.1",
     "glob": "^7.1.6",
     "js-yaml": "^3.14.0",
     "yargs": "^15.4.1"
