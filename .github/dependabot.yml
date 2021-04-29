@@ -1,0 +1,18 @@
+version: 2
+updates:
+- package-ecosystem: npm
+  directory: "/"
+  schedule:
+    interval: monthly
+    time: "11:00"
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: js-yaml
+    versions:
+    - 3.14.1
+  - dependency-name: mocha
+    versions:
+    - 8.2.1
+  - dependency-name: fs-extra
+    versions:
+    - 9.0.1
